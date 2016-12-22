@@ -4,7 +4,8 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.io.FileWriter;
 import java.io.IOException;
-
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,7 +25,7 @@ public class BankGovUa extends Thread {
 				Document doc =bank.getGov();
 				
 			  String USD =  bank.parseUSD(doc);
-			 System.out.println(USD);
+			 System.out.print(bank.today() + USD);
 			 
 	}
 	
@@ -95,6 +96,26 @@ public class BankGovUa extends Thread {
 		 Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
 		
 	}
+	
+	
+		
+	
+public String today(){
+	Calendar cal =  new GregorianCalendar();
+	StringBuilder sb = new StringBuilder();
+	Integer month = cal.get(Calendar.MONTH)+1;
+	Integer year = cal.get(Calendar.YEAR);
+	Integer day =  cal.get(Calendar.DAY_OF_MONTH);
+	
+	sb.append(day.toString());
+			sb.append("-");
+			sb.append(month.toString());
+			sb.append("-");
+			sb.append(year.toString());
+			sb.toString();
+	String str = sb.toString().replaceAll("\n", "");
+	return str;
+}
 }
 
 
