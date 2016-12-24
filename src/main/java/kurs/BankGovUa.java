@@ -17,6 +17,7 @@ import org.jsoup.select.Elements;
 
 public class BankGovUa extends Thread {
 	private static String file1 = "d:/trade.txt";
+	private static String file2 = "d:/trade1.txt";
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
 			 
@@ -25,7 +26,7 @@ public class BankGovUa extends Thread {
 				
 			
 //		System.out.print( bank.parseUSD(doc) + bank.today());
-//bank.write(bank.parseUSD(doc), bank.today());
+bank.write(bank.parseUSD(doc), bank.today());
 			 
 	}
 	
@@ -33,8 +34,6 @@ public class BankGovUa extends Thread {
 		Document doc = Jsoup.connect("https://bank.gov.ua/control/uk/curmetal/detail/currency?period=daily")
 		.timeout(000)	
 		.get();
-				
-		
 		return doc;
 	}
 	
@@ -42,9 +41,14 @@ public class BankGovUa extends Thread {
 	public String parseUSD (Document doc){
 		Elements tagElements = doc.getElementsByAttributeValue("class", "cell_c");
 		String value = (String)tagElements.html();
-			String usd =value.substring(158, 169).replaceAll(" ", "\b").replaceAll("\n", " ");
-	
-		return usd;
+			String usd =value.substring(158, 166)
+					.replaceAll(" ", "\b")
+					.replaceAll("\n", " ");
+//					.replaceAll(".", ",");
+			Float usdDoub = Float.parseFloat(usd)/100;
+			String usdstr = usdDoub.toString(); 
+			
+		return usdstr;
 		
 	}
 	
@@ -60,11 +64,18 @@ public class BankGovUa extends Thread {
 	}
 	
 	public void write(String USD, String date) throws IOException{
+		StringBuilder sb = new StringBuilder("\r");
+		String str =  sb.append(USD)
+				.append("<")
+				.append(date)
+				.append("\r\n").toString();
+		FileWriter file = new FileWriter(file1,true);
+		FileWriter file1 = new FileWriter(file2);
+		file.write(str);
+		file1.write(str);
 		
-		
-		FileWriter file = new FileWriter(file1);
-		file.write(date+USD +"\n");
-		//file.write("EUR: "+ EUR+"\n");
+		file1.flush();
+		file1.close();
 		file.flush();
 		file.close();
 		
