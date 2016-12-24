@@ -21,18 +21,17 @@ public class BankGovUa extends Thread {
 	public static void main(String[] args) throws IOException, InterruptedException {
 			 
 		BankGovUa bank = new BankGovUa();
-		
-				Document doc =bank.getGov();
+		Document doc =bank.getGov();
 				
-			  String USD =  bank.parseUSD(doc);
-			 System.out.print(bank.today() + USD);
+			
+//		System.out.print( bank.parseUSD(doc) + bank.today());
+//bank.write(bank.parseUSD(doc), bank.today());
 			 
 	}
 	
 	public Document getGov()  throws IOException {
 		Document doc = Jsoup.connect("https://bank.gov.ua/control/uk/curmetal/detail/currency?period=daily")
-				
-			.timeout(000)	
+		.timeout(000)	
 		.get();
 				
 		
@@ -43,7 +42,7 @@ public class BankGovUa extends Thread {
 	public String parseUSD (Document doc){
 		Elements tagElements = doc.getElementsByAttributeValue("class", "cell_c");
 		String value = (String)tagElements.html();
-			String usd =value.substring(158, 169);
+			String usd =value.substring(158, 169).replaceAll(" ", "\b").replaceAll("\n", " ");
 	
 		return usd;
 		
@@ -60,11 +59,12 @@ public class BankGovUa extends Thread {
 		
 	}
 	
-	public void write(String USD,String EUR) throws IOException{
+	public void write(String USD, String date) throws IOException{
+		
 		
 		FileWriter file = new FileWriter(file1);
-		file.write("USD: "+USD +"\n");
-		file.write("EUR: "+ EUR+"\n");
+		file.write(date+USD +"\n");
+		//file.write("EUR: "+ EUR+"\n");
 		file.flush();
 		file.close();
 		
